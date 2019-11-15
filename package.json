@@ -1,6 +1,6 @@
 {
   "name": "use-menu-hook",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index.js",
   "repository": "git@github.com:nielswijers/use-menu-hook.git",
   "author": "Niels Wijers <nielswijers@gmail.com>",
