@@ -13,7 +13,7 @@ function App() {
       <ul>
         <li>
           <a {...getMenuItemProps({ hasPopup: true })} href="#fruit">
-            Fruit 👉🏿
+            Fruit Fruit <span role="img" aria-label="open">👉🏿</span>
           </a>
           <ul>
             <li>
@@ -23,7 +23,7 @@ function App() {
             </li>
             <li>
               <a {...getMenuItemProps({ hasPopup: true })} href="#apples">
-                Apples 👉🏿
+                Apples <span role="img" aria-label="open">👉🏿</span>
               </a>
               <ul>
                 <li>
