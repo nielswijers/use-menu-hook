@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "lint": "eslint {src,examples/*/src}",
+    "lint": "eslint src examples/*/src",
     "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
@@ -19,6 +19,7 @@
     "@types/jest": "^24.0.23",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
     "eslint": "^6.6.0",
