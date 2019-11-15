@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "build": "lerna run build"
+    "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
