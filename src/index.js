@@ -1,4 +1,12 @@
-import { findNode, getPath, normalizeKeys } from './utils';
+import {
+  findNode,
+  getFirstChildPath,
+  getFirstSiblingPath,
+  getParentPath,
+  getPathFromElement,
+  getSiblingPath,
+  normalizeKeys,
+} from './utils';
 import { useEffect, useRef, useState } from 'react';
 
 const defaultProps = {
@@ -9,154 +17,116 @@ export const useMenu = userProps => {
   const props = { ...defaultProps, ...userProps };
   const pathRefs = useRef({});
   const getPathRef = id => pathRefs.current[id];
-  const setPathRef = (id, path) => (pathRefs.current[id] = path);
-  const [isOpen, setIsOpen] = useState(props.isOpen);
-  const [mousePath, setMousePath] = useState('');
+  const [mousePath, setMousePath] = useState(undefined);
+  const [keyPath, setKeyPath] = useState(undefined);
+
+  const isInKeyPath = id => !!(keyPath && keyPath.indexOf(getPathRef(id)) > -1);
+
   const isInPath = id => {
-    return mousePath.indexOf(getPathRef(id)) > -1;
+    return !!(
+      (mousePath && mousePath.indexOf(getPathRef(id)) > -1) ||
+      (keyPath && keyPath.indexOf(getPathRef(id)) > -1)
+    );
+  };
+
+  const isInChildPath = id => {
+    return !!(
+      (mousePath && mousePath.indexOf(getPathRef(id)) > -1) ||
+      (keyPath && keyPath.indexOf(getPathRef(id) + '/') > -1)
+    );
+  };
+
+  const buildRefs = el => {
+    if (el) {
+      const id = el.getAttribute('id');
+      pathRefs.current[id] = getPathFromElement(el);
+      const root = document.querySelector(`[aria-labelledby="${id}"]`);
+      Array.from(root.querySelectorAll('[role="menuitem"]')).forEach(x => {
+        pathRefs.current[x.getAttribute('id')] = getPathFromElement(x);
+      });
+    }
+  };
+
+  useEffect(() => {
+    const index = Object.values(pathRefs.current).indexOf(keyPath);
+    const id = Object.keys(pathRefs.current)[index];
+    const el = document.getElementById(id);
+    if (el) {
+      el.focus();
+    }
+  }, [keyPath]);
+
+  const toChild = (id, reverse) => {
+    const path = getPathRef(id);
+    const firstChildPath = getFirstChildPath(
+      path,
+      Object.values(pathRefs.current),
+      reverse,
+    );
+    setKeyPath(firstChildPath);
+  };
+
+  const toParent = id => {
+    const path = getPathRef(id);
+    const parentPath = getParentPath(path);
+    setKeyPath(parentPath);
+  };
+
+  const toSibling = (id, reverse) => {
+    const path = getPathRef(id);
+    const siblingPath = getSiblingPath(
+      path,
+      Object.values(pathRefs.current),
+      reverse,
+    );
+    setKeyPath(siblingPath);
+  };
+
+  const toFirstSibling = (id, reverse) => {
+    const path = getPathRef(id);
+    const siblingPath = getFirstSiblingPath(
+      path,
+      Object.values(pathRefs.current),
+      reverse,
+    );
+    setKeyPath(siblingPath);
   };
 
   const itemKeyDownHandlers = {
-    ArrowDown: function(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'li');
-      let item = findNode(li, 'nextElementSibling', '[role="menuitem"]', true);
-      event.currentTarget.setAttribute('tabIndex', -1);
-      if (!item) {
-        item = findNode(
-          li,
-          'parentElement',
-          'ul',
-        ).firstElementChild.querySelector('[role="menuitem"]');
-      }
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    ArrowDown(id, event) {
+      toSibling(id);
     },
-    ArrowUp(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'li');
-      let item = findNode(
-        li,
-        'previousElementSibling',
-        '[role="menuitem"]',
-        true,
-      );
-      if (!item) {
-        item = findNode(
-          li,
-          'parentElement',
-          'ul',
-        ).lastElementChild.querySelector('[role="menuitem"]');
-      }
-      event.currentTarget.setAttribute('tabIndex', -1);
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    ArrowUp(id, event) {
+      toSibling(id, true);
     },
-    ArrowLeft(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'ul');
-      const item = findNode(
-        li,
-        'previousElementSibling',
-        '[role="menuitem"]',
-        true,
-      );
-      if (item) {
-        event.currentTarget.setAttribute('tabIndex', -1);
-        item.setAttribute('tabIndex', 0);
-        item.setAttribute('aria-expanded', false);
-        item.focus();
-      }
+    ArrowLeft(id, event) {
+      toParent(id);
     },
-    ArrowRight(event) {
-      const item = findNode(
-        event.currentTarget,
-        'nextElementSibling',
-        '[role="menuitem"]',
-        true,
-      );
-      if (item) {
-        event.currentTarget.setAttribute('tabIndex', -1);
-        event.currentTarget.setAttribute('aria-expanded', true);
-        item.setAttribute('tabIndex', 0);
-        item.focus();
-      }
+    ArrowRight(id, event) {
+      toChild(id);
     },
-    Enter(event) {
-      const item = findNode(
-        event.currentTarget,
-        'nextElementSibling',
-        '[role="menuitem"]',
-        true,
-      );
-      if (item) {
-        event.currentTarget.setAttribute('tabIndex', -1);
-        event.currentTarget.setAttribute('aria-expanded', true);
-        item.setAttribute('tabIndex', 0);
-        item.focus();
-      }
+    Enter(id, event) {
+      toChild(id);
     },
-    Home(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'li');
-      const item = findNode(
-        li,
-        'parentElement',
-        'ul',
-      ).firstElementChild.querySelector('[role="menuitem"]');
-      event.currentTarget.setAttribute('tabIndex', -1);
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    Home(id, event) {
+      toFirstSibling(id);
     },
-    End(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'li');
-      const item = findNode(
-        li,
-        'parentElement',
-        'ul',
-      ).lastElementChild.querySelector('[role="menuitem"]');
-      event.currentTarget.setAttribute('tabIndex', -1);
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    End(id, event) {
+      toFirstSibling(id, true);
     },
-    Escape(event) {
-      const li = findNode(event.currentTarget, 'parentElement', 'ul');
-      const item = findNode(
-        li,
-        'previousElementSibling',
-        '[aria-haspopup="true"]',
-        true,
-      );
-      if (item) {
-        event.currentTarget.setAttribute('tabIndex', -1);
-        item.setAttribute('tabIndex', 0);
-        item.setAttribute('aria-expanded', false);
-        item.focus();
-      }
+    Escape(id, event) {
+      toParent(id);
     },
-    Space(event) {
-      const item = findNode(
-        event.currentTarget,
-        'nextElementSibling',
-        '[role="menuitem"]',
-        true,
-      );
-      if (item) {
-        event.currentTarget.setAttribute('tabIndex', -1);
-        event.currentTarget.setAttribute('aria-expanded', true);
-        item.setAttribute('tabIndex', 0);
-        item.focus();
-      }
+    Space(id, event) {
+      toChild(id);
     },
   };
-  const buttonHandleClick = event => {
-    setIsOpen(true);
 
-    const item = event.currentTarget.nextElementSibling.querySelector(
-      '[role="menuitem"]',
-    );
-    item.setAttribute('tabIndex', 0);
-    item.focus();
+  const buttonHandleClick = id => event => {
+    setKeyPath(getPathRef(id));
   };
 
   const buttonHandleMouseEnter = id => event => {
-    setIsOpen(true);
     setMousePath(getPathRef(id));
   };
 
@@ -167,59 +137,29 @@ export const useMenu = userProps => {
       !(event.relatedTarget instanceof HTMLElement) ||
       (menu !== event.relatedTarget && !menu.contains(event.relatedTarget))
     ) {
-      setIsOpen(false);
       setMousePath('');
     }
   };
 
   const buttonKeyDownhandlers = {
-    ArrowDown(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      setIsOpen(true);
-
-      const item = event.currentTarget.nextElementSibling.querySelector(
-        '[role="menuitem"]',
-      );
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    ArrowDown(id, event) {
+      toChild(id);
     },
-    ArrowUp(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      setIsOpen(true);
-      const item = event.currentTarget.nextElementSibling.lastChild.querySelector(
-        '[role="menuitem"]',
-      );
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    ArrowUp(id, event) {
+      toChild(id, true);
     },
-    Space(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      setIsOpen(true);
-      const item = event.currentTarget.nextElementSibling.querySelector(
-        '[role="menuitem"]',
-      );
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    Space(id, event) {
+      toChild(id);
     },
-    Enter(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      setIsOpen(true);
-      const item = event.currentTarget.nextElementSibling.querySelector(
-        '[role="menuitem"]',
-      );
-      item.setAttribute('tabIndex', 0);
-      item.focus();
+    Enter(id, event) {
+      toChild(id);
     },
   };
 
-  const handleKey = handlers => event => {
+  const handleKey = (id, handlers) => event => {
     const key = normalizeKeys(event.key);
     if (handlers[key]) {
-      handlers[key](event);
+      handlers[key](id, event);
     }
   };
 
@@ -231,12 +171,10 @@ export const useMenu = userProps => {
     const returnProps = {
       ...p,
       id,
-      ref: el => {
-        setPathRef(id, getPath(el));
-      },
       role: 'menuitem',
-      tabIndex: isInPath(id) ? 0 : -1,
-      onKeyDown: handleKey(itemKeyDownHandlers),
+      tabIndex: keyPath && keyPath === getPathRef(id) ? 0 : -1,
+      onKeyDown: handleKey(id, itemKeyDownHandlers),
+      onClick: buttonHandleClick(id),
       onMouseEnter: buttonHandleMouseEnter(id),
       onMouseLeave: buttonHandleMouseLeave(id),
     };
@@ -247,7 +185,7 @@ export const useMenu = userProps => {
 
     return {
       'aria-haspopup': true,
-      'aria-expanded': isInPath(id) ? true : false,
+      'aria-expanded': isInChildPath(id) ? true : false,
       ...returnProps,
     };
   };
@@ -258,13 +196,13 @@ export const useMenu = userProps => {
     }
     return {
       id,
-      'aria-haspopup': true,
-      'aria-expanded': isOpen,
       ref: el => {
-        setPathRef(id, getPath(el));
+        buildRefs(el);
       },
-      onKeyDown: handleKey(buttonKeyDownhandlers),
-      onClick: buttonHandleClick,
+      'aria-haspopup': true,
+      'aria-expanded': isInPath(id),
+      onKeyDown: handleKey(id, buttonKeyDownhandlers),
+      onClick: buttonHandleClick(id),
       onMouseEnter: buttonHandleMouseEnter(id),
       onMouseLeave: buttonHandleMouseLeave(id),
     };

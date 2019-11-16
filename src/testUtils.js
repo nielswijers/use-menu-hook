@@ -5,91 +5,58 @@ import { render } from '@testing-library/react';
 
 export const setupHook = props => renderHook(() => useMenu(props));
 export const Menu = props => {
-  const {
-    getMenuItemProps,
-    getMenuButtonProps,
-    getMenuRootProps,
-    getMenuProps,
-  } = useMenu(props);
+  const { getMenuItemProps, getMenuButtonProps, getMenuProps } = useMenu(props);
   return (
     <div>
-      <button data-testid="button" {...getMenuButtonProps({ id: 'button' })}>
-        open menu
-      </button>
-      <ul data-testid="root" {...getMenuProps({ labelledBy: 'button' })}>
+      <button {...getMenuButtonProps({ id: 'button' })}>Food</button>
+      <ul {...getMenuProps({ labelledBy: 'button' })}>
         <li>
           <a
             {...getMenuItemProps({ hasPopup: true, id: 'fruit' })}
-            data-testid="fruit"
             href="#fruit"
           >
             Fruit
           </a>
           <ul {...getMenuProps({ labelledBy: 'fruit' })}>
             <li>
-              <a
-                {...getMenuItemProps({ id: 'bananas' })}
-                data-testid="bananas"
-                href="#bananas"
-              >
+              <a {...getMenuItemProps({ id: 'bananas' })} href="#bananas">
                 Bananas
               </a>
             </li>
             <li>
               <a
                 {...getMenuItemProps({ hasPopup: true, id: 'apples' })}
-                data-testid="apples"
                 href="#apples"
               >
                 Apples
               </a>
               <ul {...getMenuProps({ labelledBy: 'apples' })}>
                 <li>
-                  <a
-                    {...getMenuItemProps({ id: 'red' })}
-                    data-testid="red"
-                    href="#red"
-                  >
+                  <a {...getMenuItemProps({ id: 'red' })} href="#red">
                     Red
                   </a>
                 </li>
                 <li>
-                  <a
-                    {...getMenuItemProps({ id: 'green' })}
-                    data-testid="green"
-                    href="#green"
-                  >
+                  <a {...getMenuItemProps({ id: 'green' })} href="#green">
                     Green
                   </a>
                 </li>
               </ul>
             </li>
             <li>
-              <a
-                {...getMenuItemProps({ id: 'pears' })}
-                data-testid="pears"
-                href="#pears"
-              >
+              <a {...getMenuItemProps({ id: 'pears' })} href="#pears">
                 Pears
               </a>
             </li>
           </ul>
         </li>
         <li>
-          <a
-            {...getMenuItemProps({ id: 'vegetables' })}
-            data-testid="vegetables"
-            href="#vegetables"
-          >
+          <a {...getMenuItemProps({ id: 'vegetables' })} href="#vegetables">
             Vegetables
           </a>
         </li>
         <li>
-          <a
-            {...getMenuItemProps({ id: 'meat' })}
-            data-testid="meat"
-            href="#meat"
-          >
+          <a {...getMenuItemProps({ id: 'meat' })} href="#meat">
             Meat
           </a>
         </li>
