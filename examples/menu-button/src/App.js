@@ -2,14 +2,14 @@ import React from 'react';
 import { useMenu } from 'use-menu-hook';
 
 function App() {
-  const { getMenuItemProps, getMenuButtonProps, getMenuRootProps } = useMenu();
+  const { getMenuItemProps, getMenuButtonProps, getMenuProps } = useMenu();
 
   return (
     <div>
       <button data-testid="button" {...getMenuButtonProps({ id: 'button' })}>
         open menu
       </button>
-      <ul data-testid="root" {...getMenuRootProps()}>
+      <ul data-testid="root" {...getMenuProps({ labelledBy: 'button' })}>
         <li>
           <a
             {...getMenuItemProps({ hasPopup: true, id: 'fruit' })}
@@ -18,7 +18,7 @@ function App() {
           >
             Fruit
           </a>
-          <ul>
+          <ul {...getMenuProps({ labelledBy: 'fruit' })}>
             <li>
               <a
                 {...getMenuItemProps({ id: 'bananas' })}
@@ -36,7 +36,7 @@ function App() {
               >
                 Apples
               </a>
-              <ul>
+              <ul {...getMenuProps({ labelledBy: 'apples' })}>
                 <li>
                   <a
                     {...getMenuItemProps({ id: 'red' })}

@@ -6,7 +6,6 @@ describe('useMenu', () => {
       const { result } = setupHook();
       expect(result.current.getMenuItemProps).toBeInstanceOf(Function);
       expect(result.current.getMenuButtonProps).toBeInstanceOf(Function);
-      expect(result.current.getMenuRootProps).toBeInstanceOf(Function);
       expect(result.current.getMenuProps).toBeInstanceOf(Function);
     });
   });

@@ -20,5 +20,11 @@ describe('getMenuProps', () => {
       const props = result.current.getMenuProps({ labelledBy: 'someid' });
       expect(props.role).toBe('menu');
     });
+
+    it('hides the menu by default', () =>{
+      const { result } = setupHook();
+      const props = result.current.getMenuProps({ labelledBy: 'someid' });
+      expect(props.style.display).toBe('none');
+    })
   });
 });

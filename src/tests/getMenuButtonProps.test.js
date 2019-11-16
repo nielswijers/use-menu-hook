@@ -43,28 +43,32 @@ describe('getMenuButtonProps', () => {
     });
 
     describe('mouse enter handler', () => {
-      it('opens the menu', () => {
-        const { getByTestId } = setup();
-        const button = getByTestId('button');
+      it('opens the corresponding menu', () => {
+        const { getByText, getByLabelText } = setup();
+        const button = getByText('open menu');
+        const menu = getByLabelText('open menu');
         fireEvent.mouseEnter(button);
         expect(button.getAttribute('aria-expanded')).toBe('true');
+        expect(menu.style.display).toBe('');
       });
     });
 
     describe('mouse leave handler', () => {
       it('closes the menu', () => {
-        const { getByTestId } = setup({ isOpen: true });
-        const button = getByTestId('button');
-        fireEvent.mouseLeave(button);
+        const { getByText } = setup();
+        const button = getByText('open menu');
+        fireEvent.mouseEnter(button);
+        fireEvent.mouseLeave(button, { relatedTarget: document.body });
         expect(button.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('does not close the menu if mouse is over', () => {
-        const { getByTestId } = setup({ isOpen: true });
-        const button = getByTestId('button');
-        const root = getByTestId('root');
-        fireEvent.mouseLeave(button);
-        fireEvent.mouseEnter(root);
+      it('does not close the menu if mouse is over it', () => {
+        const { getByText, getByLabelText } = setup();
+        const button = getByText('open menu');
+        const menu = getByLabelText('open menu');
+        fireEvent.mouseEnter(button);
+        fireEvent.mouseLeave(button, { relatedTarget: menu });
+        expect(menu.style.display).toBe('');
         expect(button.getAttribute('aria-expanded')).toBe('true');
       });
     });

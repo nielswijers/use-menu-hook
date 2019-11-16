@@ -1,5 +1,5 @@
-import { findNode, normalizeKeys } from './utils';
-import { useRef, useState } from 'react';
+import { findNode, getPath, normalizeKeys } from './utils';
+import { useEffect, useRef, useState } from 'react';
 
 const defaultProps = {
   isOpen: false,
@@ -7,7 +7,14 @@ const defaultProps = {
 
 export const useMenu = userProps => {
   const props = { ...defaultProps, ...userProps };
+  const pathRefs = useRef({});
+  const getPathRef = id => pathRefs.current[id];
+  const setPathRef = (id, path) => (pathRefs.current[id] = path);
   const [isOpen, setIsOpen] = useState(props.isOpen);
+  const [mousePath, setMousePath] = useState('');
+  const isInPath = id => {
+    return mousePath.indexOf(getPathRef(id)) > -1;
+  };
 
   const itemKeyDownHandlers = {
     ArrowDown: function(event) {
@@ -148,12 +155,21 @@ export const useMenu = userProps => {
     item.focus();
   };
 
-  const buttonHandleMouseEnter = event => {
+  const buttonHandleMouseEnter = id => event => {
     setIsOpen(true);
+    setMousePath(getPathRef(id));
   };
 
-  const buttonHandleMousLeave = event => {
-    setIsOpen(false);
+  const buttonHandleMouseLeave = id => event => {
+    const menu = document.querySelector(`[aria-labelledby=${id}]`);
+    if (
+      !menu ||
+      !(event.relatedTarget instanceof HTMLElement) ||
+      (menu !== event.relatedTarget && !menu.contains(event.relatedTarget))
+    ) {
+      setIsOpen(false);
+      setMousePath('');
+    }
   };
 
   const buttonKeyDownhandlers = {
@@ -215,16 +231,25 @@ export const useMenu = userProps => {
     const returnProps = {
       ...p,
       id,
+      ref: el => {
+        setPathRef(id, getPath(el));
+      },
       role: 'menuitem',
-      tabIndex: -1,
+      tabIndex: isInPath(id) ? 0 : -1,
       onKeyDown: handleKey(itemKeyDownHandlers),
+      onMouseEnter: buttonHandleMouseEnter(id),
+      onMouseLeave: buttonHandleMouseLeave(id),
     };
 
     if (!hasPopup) {
       return returnProps;
     }
 
-    return { 'aria-haspopup': true, 'aria-expanded': false, ...returnProps };
+    return {
+      'aria-haspopup': true,
+      'aria-expanded': isInPath(id) ? true : false,
+      ...returnProps,
+    };
   };
 
   const getMenuButtonProps = ({ id } = {}) => {
@@ -235,21 +260,13 @@ export const useMenu = userProps => {
       id,
       'aria-haspopup': true,
       'aria-expanded': isOpen,
+      ref: el => {
+        setPathRef(id, getPath(el));
+      },
       onKeyDown: handleKey(buttonKeyDownhandlers),
       onClick: buttonHandleClick,
-      onMouseEnter: buttonHandleMouseEnter,
-      onMouseLeave: buttonHandleMousLeave,
-    };
-  };
-
-  const menuRootHandleMouseEnter = () => {};
-  const menuRootHandleMouseLeave = () => {};
-
-  const getMenuRootProps = () => {
-    return {
-      role: 'menu',
-      onMouseEnter: menuRootHandleMouseEnter,
-      onMouseLeave: menuRootHandleMouseLeave,
+      onMouseEnter: buttonHandleMouseEnter(id),
+      onMouseLeave: buttonHandleMouseLeave(id),
     };
   };
 
@@ -260,13 +277,15 @@ export const useMenu = userProps => {
     return {
       role: 'menu',
       'aria-labelledby': labelledBy,
+      style: {
+        display: isInPath(labelledBy) ? undefined : 'none',
+      },
     };
   };
 
   return {
     getMenuItemProps,
     getMenuButtonProps,
-    getMenuRootProps,
     getMenuProps,
   };
 };

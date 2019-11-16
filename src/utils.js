@@ -21,3 +21,18 @@ export const findNode = (el, method, matcher, nested) => {
     target = target[method];
   }
 };
+
+export const getPath = el => {
+  if (!el) {
+    return ''
+  }
+  let path = el.getAttribute('id');
+  while (el) {
+    const name = el.getAttribute('aria-labelledby');
+    if (name) {
+      path = `${name}/${path}`;
+    }
+    el = el.parentElement;
+  }
+  return path;
+};
