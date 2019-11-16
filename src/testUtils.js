@@ -8,7 +8,9 @@ export const Menu = props => {
   const { getMenuItemProps, getMenuButtonProps } = useMenu(props);
   return (
     <div>
-      <button data-testid="button" {...getMenuButtonProps()}>open menu</button>
+      <button data-testid="button" {...getMenuButtonProps()}>
+        open menu
+      </button>
       <ul>
         <li>
           <a

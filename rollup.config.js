@@ -10,6 +10,7 @@ export default {
       format: 'cjs',
     },
   ],
+  external: ['react', 'react-dom'],
   plugins: [
     resolve(),
     babel({
