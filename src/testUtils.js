@@ -5,12 +5,10 @@ import { render } from '@testing-library/react';
 
 export const setupHook = props => renderHook(() => useMenu(props));
 export const Menu = props => {
-  const { getMenuItemProps } = useMenu(props);
+  const { getMenuItemProps, getMenuButtonProps } = useMenu(props);
   return (
     <div>
-      <button aria-haspopup="true" aria-expanded="true">
-        open menu
-      </button>
+      <button data-testid="button" {...getMenuButtonProps()}>open menu</button>
       <ul>
         <li>
           <a

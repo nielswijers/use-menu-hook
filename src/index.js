@@ -1,7 +1,10 @@
 import { findNode, normalizeKeys } from './utils';
+import { useState } from 'react';
 
 export const useMenu = () => {
-  const keyDownHandlers = {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const itemKeyDownHandlers = {
     ArrowDown: function(event) {
       const li = findNode(event.currentTarget, 'parentElement', 'li');
       let item = findNode(li, 'nextElementSibling', '[role="menuitem"]', true);
@@ -131,6 +134,50 @@ export const useMenu = () => {
     },
   };
 
+  const buttonKeyDownhandlers = {
+    ArrowDown(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsOpen(true);
+
+      const item = event.currentTarget.nextElementSibling.querySelector(
+        '[role="menuitem"]',
+      );
+      item.setAttribute('tabIndex', 0);
+      item.focus();
+    },
+    ArrowUp(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsOpen(true);
+      const item = event.currentTarget.nextElementSibling.lastChild.querySelector(
+        '[role="menuitem"]',
+      );
+      item.setAttribute('tabIndex', 0);
+      item.focus();
+    },
+    Space(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsOpen(true);
+      const item = event.currentTarget.nextElementSibling.querySelector(
+        '[role="menuitem"]',
+      );
+      item.setAttribute('tabIndex', 0);
+      item.focus();
+    },
+    Enter(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setIsOpen(true);
+      const item = event.currentTarget.nextElementSibling.querySelector(
+        '[role="menuitem"]',
+      );
+      item.setAttribute('tabIndex', 0);
+      item.focus();
+    },
+  };
+
   const handleKey = handlers => event => {
     const key = normalizeKeys(event.key);
     if (handlers[key]) {
@@ -144,15 +191,23 @@ export const useMenu = () => {
       ...p,
       role: 'menuitem',
       tabIndex: -1,
-      onKeyDown: handleKey(keyDownHandlers),
+      onKeyDown: handleKey(itemKeyDownHandlers),
     };
 
     if (!hasPopup) {
       return returnProps;
     }
 
-    return { 'aria-haspopup': false, 'aria-expanded': false, ...returnProps };
+    return { 'aria-haspopup': true, 'aria-expanded': false, ...returnProps };
   };
 
-  return { getMenuItemProps };
+  const getMenuButtonProps = () => {
+    return {
+      'aria-haspopup': true,
+      'aria-expanded': isOpen,
+      onKeyDown: handleKey(buttonKeyDownhandlers),
+    };
+  };
+
+  return { getMenuItemProps, getMenuButtonProps };
 };

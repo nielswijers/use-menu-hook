@@ -5,6 +5,7 @@ describe('useMenu', () => {
     it('provides prop getters as functions', () => {
       const { result } = setupHook();
       expect(result.current.getMenuItemProps).toBeInstanceOf(Function);
+      expect(result.current.getMenuButtonProps).toBeInstanceOf(Function);
     });
   });
 });
