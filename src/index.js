@@ -1,8 +1,13 @@
 import { findNode, normalizeKeys } from './utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
-export const useMenu = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const defaultProps = {
+  isOpen: false,
+};
+
+export const useMenu = userProps => {
+  const props = { ...defaultProps, ...userProps };
+  const [isOpen, setIsOpen] = useState(props.isOpen);
 
   const itemKeyDownHandlers = {
     ArrowDown: function(event) {
@@ -108,7 +113,7 @@ export const useMenu = () => {
       const item = findNode(
         li,
         'previousElementSibling',
-        '[role="menuitem"]',
+        '[aria-haspopup="true"]',
         true,
       );
       if (item) {
@@ -132,6 +137,23 @@ export const useMenu = () => {
         item.focus();
       }
     },
+  };
+  const buttonHandleClick = event => {
+    setIsOpen(true);
+
+    const item = event.currentTarget.nextElementSibling.querySelector(
+      '[role="menuitem"]',
+    );
+    item.setAttribute('tabIndex', 0);
+    item.focus();
+  };
+
+  const buttonHandleMouseEnter = event => {
+    setIsOpen(true);
+  };
+
+  const buttonHandleMousLeave = event => {
+    setIsOpen(false);
   };
 
   const buttonKeyDownhandlers = {
@@ -186,9 +208,13 @@ export const useMenu = () => {
   };
 
   const getMenuItemProps = (itemProps = {}) => {
-    const { hasPopup, ...p } = itemProps;
+    const { hasPopup, id, ...p } = itemProps;
+    if (typeof id === 'undefined') {
+      throw new Error('getMenuItemProps requires an id');
+    }
     const returnProps = {
       ...p,
+      id,
       role: 'menuitem',
       tabIndex: -1,
       onKeyDown: handleKey(itemKeyDownHandlers),
@@ -201,13 +227,46 @@ export const useMenu = () => {
     return { 'aria-haspopup': true, 'aria-expanded': false, ...returnProps };
   };
 
-  const getMenuButtonProps = () => {
+  const getMenuButtonProps = ({ id } = {}) => {
+    if (typeof id === 'undefined') {
+      throw new Error('getMenuButtonProps requires an id');
+    }
     return {
+      id,
       'aria-haspopup': true,
       'aria-expanded': isOpen,
       onKeyDown: handleKey(buttonKeyDownhandlers),
+      onClick: buttonHandleClick,
+      onMouseEnter: buttonHandleMouseEnter,
+      onMouseLeave: buttonHandleMousLeave,
     };
   };
 
-  return { getMenuItemProps, getMenuButtonProps };
+  const menuRootHandleMouseEnter = () => {};
+  const menuRootHandleMouseLeave = () => {};
+
+  const getMenuRootProps = () => {
+    return {
+      role: 'menu',
+      onMouseEnter: menuRootHandleMouseEnter,
+      onMouseLeave: menuRootHandleMouseLeave,
+    };
+  };
+
+  const getMenuProps = ({ labelledBy } = {}) => {
+    if (typeof labelledBy === 'undefined') {
+      throw new Error('labelledBy is required');
+    }
+    return {
+      role: 'menu',
+      'aria-labelledby': labelledBy,
+    };
+  };
+
+  return {
+    getMenuItemProps,
+    getMenuButtonProps,
+    getMenuRootProps,
+    getMenuProps,
+  };
 };
