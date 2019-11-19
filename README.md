@@ -1,5 +1,6 @@
 # useMenu
-
+![npm bundle size](https://img.shields.io/bundlephobia/min/use-menu-hook)
+![npm](https://img.shields.io/npm/v/use-menu-hook)
 ## The problem
 
 You need an menu experience in your application and you want it to be
