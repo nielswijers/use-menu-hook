@@ -1,57 +1,63 @@
 import React from 'react';
-import './App.css';
 import { useMenu } from 'use-menu-hook';
 
 function App() {
-  const { getMenuItemProps } = useMenu();
-
+  const {
+    getMenuItemProps,
+    getMenuButtonProps,
+    getMenuProps,
+  } = useMenu();
   return (
-    <div className="App">
-      <button aria-expanded={true} aria-haspopup={true}>
-        Open me
-      </button>
-      <ul>
+    <div>
+      <button {...getMenuButtonProps({ id: 'button' })}>Food</button>
+      <ul {...getMenuProps({ labelledBy: 'button' })}>
         <li>
-          <a {...getMenuItemProps({ hasPopup: true })} href="#fruit">
-            Fruit Fruit <span role="img" aria-label="open">👉🏿</span>
+          <a
+            {...getMenuItemProps({ hasPopup: true, id: 'fruit' })}
+            href="#fruit"
+          >
+            Fruit
           </a>
-          <ul>
-            <li>
-              <a {...getMenuItemProps()} href="#bananas">
+          <ul {...getMenuProps({ labelledBy: 'fruit' })}>
+            <li {...getMenuItemProps({ id: 'bananas' })}>
+              <a  href="#bananas">
                 Bananas
               </a>
             </li>
             <li>
-              <a {...getMenuItemProps({ hasPopup: true })} href="#apples">
-                Apples <span role="img" aria-label="open">👉🏿</span>
+              <a
+                {...getMenuItemProps({ hasPopup: true, id: 'apples' })}
+                href="#apples"
+              >
+                Apples
               </a>
-              <ul>
+              <ul {...getMenuProps({ labelledBy: 'apples' })}>
                 <li>
-                  <a {...getMenuItemProps()} href="#red">
+                  <a {...getMenuItemProps({ id: 'red' })} href="#red">
                     Red
                   </a>
                 </li>
                 <li>
-                  <a {...getMenuItemProps()} href="#green">
+                  <a {...getMenuItemProps({ id: 'green' })} href="#green">
                     Green
                   </a>
                 </li>
               </ul>
             </li>
             <li>
-              <a {...getMenuItemProps()} href="#pears">
+              <a {...getMenuItemProps({ id: 'pears' })} href="#pears">
                 Pears
               </a>
             </li>
           </ul>
         </li>
         <li>
-          <a {...getMenuItemProps()} href="#vegetables">
+          <a {...getMenuItemProps({ id: 'vegetables' })} href="#vegetables">
             Vegetables
           </a>
         </li>
         <li>
-          <a {...getMenuItemProps()} href="#meat">
+          <a {...getMenuItemProps({ id: 'meat' })} href="#meat">
             Meat
           </a>
         </li>
