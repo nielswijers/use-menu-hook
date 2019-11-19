@@ -1,12 +1,8 @@
 import React from 'react';
-import { useMenu } from 'use-menu-hook';
+import useMenu from 'use-menu-hook';
 
 function App() {
-  const {
-    getMenuItemProps,
-    getMenuButtonProps,
-    getMenuProps,
-  } = useMenu();
+  const { getMenuItemProps, getMenuButtonProps, getMenuProps } = useMenu();
   return (
     <div>
       <button {...getMenuButtonProps({ id: 'button' })}>Food</button>
@@ -19,10 +15,8 @@ function App() {
             Fruit
           </a>
           <ul {...getMenuProps({ labelledBy: 'fruit' })}>
-            <li {...getMenuItemProps({ id: 'bananas' })}>
-              <a  href="#bananas">
-                Bananas
-              </a>
+            <li>
+              <a {...getMenuItemProps({ id: 'bananas' })} href="#bananas">Bananas</a>
             </li>
             <li>
               <a

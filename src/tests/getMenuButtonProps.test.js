@@ -31,23 +31,12 @@ describe('getMenuButtonProps', () => {
   });
 
   describe('event handlers', () => {
-    describe('click handler', () => {
-      it('opens menu and moves focus to first menuitem on `ArrowDown`', () => {
-        const { getByText } = setup();
-        const button = getByText('Food');
-        fireEvent.click(button);
-        expect(button.getAttribute('aria-expanded')).toBe('true');
-        expect(document.activeElement).toBe(button);
-      });
-    });
-
     describe('mouse enter handler', () => {
       it('opens the corresponding menu', () => {
         const { getByText, getByLabelText } = setup();
         const button = getByText('Food');
         const menu = getByLabelText('Food');
         fireEvent.mouseEnter(button);
-        expect(button.getAttribute('aria-expanded')).toBe('true');
         expect(menu.style.display).toBe('');
       });
     });

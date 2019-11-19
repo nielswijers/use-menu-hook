@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react-hooks';
-import { useMenu } from './index';
 import { render } from '@testing-library/react';
+import useMenu from './';
 
 export const setupHook = props => renderHook(() => useMenu(props));
 export const Menu = props => {
