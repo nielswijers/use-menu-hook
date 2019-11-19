@@ -1,5 +1,5 @@
 import { setup, setupHook } from '../testUtils';
-import { fireEvent, act } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 
 const paths = [
   'button',

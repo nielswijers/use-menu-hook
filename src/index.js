@@ -1,13 +1,5 @@
-import {
-  getFirstChildPath,
-  getFirstSiblingPath,
-  getParentPath,
-  getPathFromElement,
-  getSiblingPath,
-  normalizeKeys,
-  test,
-} from './utils';
-import { useEffect, useReducer, useRef, useState } from 'react';
+import { getPathFromElement, normalizeKeys, test } from './utils';
+import { useEffect, useReducer, useRef } from 'react';
 import menuReducer from './reducer';
 import * as changeTypes from './stateChangeTypes';
 
@@ -61,45 +53,45 @@ const useMenu = userProps => {
   }, [activeKeyPath]);
 
   const itemKeyDownHandlers = id => ({
-    ArrowDown(event) {
+    ArrowDown() {
       dispatch({ type: changeTypes.ItemKeyDownArrowDown, id });
     },
-    ArrowUp(event) {
+    ArrowUp() {
       dispatch({ type: changeTypes.ItemKeyDownArrowUp, id });
     },
-    ArrowLeft(event) {
+    ArrowLeft() {
       dispatch({ type: changeTypes.ItemKeyDownArrowLeft, id });
     },
-    ArrowRight(event) {
+    ArrowRight() {
       dispatch({ type: changeTypes.ItemKeyDownArrowRight, id });
     },
-    Enter(event) {
+    Enter() {
       dispatch({ type: changeTypes.ItemKeyDownEnter, id });
     },
-    Home(event) {
+    Home() {
       dispatch({ type: changeTypes.ItemKeyDownHome, id });
     },
-    End(event) {
+    End() {
       dispatch({ type: changeTypes.ItemKeyDownEnd, id });
     },
     Escape(event) {
       event.preventDefault();
       dispatch({ type: changeTypes.ItemKeyDownEscape, id });
     },
-    Space(event) {
+    Space() {
       dispatch({ type: changeTypes.ItemKeyDownSpace, id });
     },
   });
 
-  const buttonHandleClick = id => event => {
+  const buttonHandleClick = id => () => {
     dispatch({ type: changeTypes.ClearActiveMousePath, id });
   };
 
-  const buttonHandleMouseEnter = id => event => {
+  const buttonHandleMouseEnter = id => () => {
     dispatch({ type: changeTypes.SetActiveMousePath, id });
   };
 
-  const itemHandleBlur = id => event => {
+  const itemHandleBlur = id => () => {
     dispatch({ type: changeTypes.ItemBlur, id });
   };
 
@@ -115,16 +107,16 @@ const useMenu = userProps => {
   };
 
   const buttonKeyDownhandlers = id => ({
-    ArrowDown(event) {
+    ArrowDown() {
       dispatch({ type: changeTypes.ButtonKeyDownArrowDown, id });
     },
-    ArrowUp(event) {
+    ArrowUp() {
       dispatch({ type: changeTypes.ButtonKeyDownArrowUp, id });
     },
-    Space(event) {
+    Space() {
       dispatch({ type: changeTypes.ButtonKeyDownSpace, id });
     },
-    Enter(event) {
+    Enter() {
       dispatch({ type: changeTypes.ButtonKeyDownEnter, id });
     },
   });

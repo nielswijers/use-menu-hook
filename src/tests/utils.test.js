@@ -1,11 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import {
-  getFirstChildPath, getFirstSiblingPath,
-  getParentPath,
   getPathFromElement,
-  getSiblingPath,
-  rotateTo,
 } from '../utils';
 
 describe('utils', () => {
