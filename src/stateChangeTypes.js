@@ -1,6 +1,7 @@
 export const SetPaths = '__set_paths__';
 export const SetActiveMousePath = '__set_active_mouse_path__';
 export const ClearActiveMousePath = '__clear_active_mouse_path__';
+export const ItemBlur = '__item_blur__';
 export const ItemKeyDownArrowDown = '__item_keydown_arrow_down__';
 export const ItemKeyDownArrowUp = '__item_keydown_arrow_up__';
 export const ItemKeyDownArrowLeft = '__item_keydown_arrow_left__';

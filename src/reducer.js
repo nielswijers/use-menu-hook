@@ -4,7 +4,7 @@ const rotate = (id, paths) => {
   const index = paths.findIndex(test(`${id}$`));
   return paths.slice(index).concat(paths.slice(0, index));
 };
-
+const self = (id, paths) => paths.find(test(`${id}$`));
 const parent = (id, paths) => paths.find(test(`${id}$`)).replace(`/${id}`, '');
 const children = (id, paths) => paths.filter(test(`${id}/[a-zA-Z0-9]+$`));
 const siblings = (id, paths) => children(parent(id, paths), paths);
@@ -19,6 +19,14 @@ export default function menuReducer(state, action) {
       changes = {
         paths: action.paths,
       };
+      break;
+    }
+    case changeTypes.ItemBlur: {
+      if (state.activeKeyPath === self(action.id, paths)) {
+        changes = {
+          activeKeyPath: '',
+        };
+      }
       break;
     }
     case changeTypes.ItemKeyDownArrowDown: {
@@ -44,13 +52,13 @@ export default function menuReducer(state, action) {
     }
     case changeTypes.ItemKeyDownArrowRight: {
       changes = {
-        activeKeyPath: children(action.id, paths)[0],
+        activeKeyPath: children(action.id, paths)[0] || self(action.id, paths),
       };
       break;
     }
     case changeTypes.ItemKeyDownEnter: {
       changes = {
-        activeKeyPath: children(action.id, paths)[0],
+        activeKeyPath: children(action.id, paths)[0] || self(action.id, paths),
       };
       break;
     }
@@ -74,7 +82,7 @@ export default function menuReducer(state, action) {
     }
     case changeTypes.ItemKeyDownSpace: {
       changes = {
-        activeKeyPath: children(action.id, paths)[0],
+        activeKeyPath: children(action.id, paths)[0] || self(action.id, paths),
       };
       break;
     }

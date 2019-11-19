@@ -127,6 +127,13 @@ describe('getMenuItemProps', () => {
         expect(document.activeElement).toBe(expected);
       });
 
+      it('keeps focus on `ArrowRight` if no children ', () => {
+        const { getByText } = setup();
+        const target = getByText('Vegetables');
+        fireEvent.keyDown(target, { key: 'ArrowRight' });
+        expect(document.activeElement === target).toBe(true);
+      });
+
       it('closes submenu and focus to parent menu item on `ArrowLeft`', () => {
         const { getByText } = setup();
         const target = getByText('Apples');
@@ -191,6 +198,13 @@ describe('getMenuItemProps', () => {
         expect(target.getAttribute('tabIndex')).toBe('-1');
         expect(expected.getAttribute('tabIndex')).toBe('0');
         expect(document.activeElement).toBe(expected);
+      });
+    });
+    describe('blur handler', () => {
+      it('closes the menu', () => {
+        const { getByText } = setup({activeKeyPath:'button/fruit/bananas'});
+        fireEvent.blur(getByText('Bananas'));
+        expect(getByText('Food').getAttribute('aria-expanded')).toBe('false');
       });
     });
   });

@@ -83,6 +83,7 @@ const useMenu = userProps => {
       dispatch({ type: changeTypes.ItemKeyDownEnd, id });
     },
     Escape(event) {
+      event.preventDefault();
       dispatch({ type: changeTypes.ItemKeyDownEscape, id });
     },
     Space(event) {
@@ -91,11 +92,15 @@ const useMenu = userProps => {
   });
 
   const buttonHandleClick = id => event => {
-    // setKeyPath(getPathRef(id));
+    dispatch({ type: changeTypes.ClearActiveMousePath, id });
   };
 
   const buttonHandleMouseEnter = id => event => {
     dispatch({ type: changeTypes.SetActiveMousePath, id });
+  };
+
+  const itemHandleBlur = id => event => {
+    dispatch({ type: changeTypes.ItemBlur, id });
   };
 
   const buttonHandleMouseLeave = id => event => {
@@ -145,6 +150,7 @@ const useMenu = userProps => {
       onClick: buttonHandleClick(id),
       onMouseEnter: buttonHandleMouseEnter(id),
       onMouseLeave: buttonHandleMouseLeave(id),
+      onBlur: itemHandleBlur(id),
     };
 
     if (!hasPopup) {
