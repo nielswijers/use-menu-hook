@@ -44,7 +44,7 @@ const useMenu = userProps => {
   }, []);
 
   useEffect(() => {
-    const match = activeKeyPath.match(/\/?([a-zA-Z0-9]+)$/) || [];
+    const match = activeKeyPath.match(/\/?([a-zA-Z0-9_]+)$/) || [];
     const id = match[1];
     const el = document.getElementById(id);
     if (el) {

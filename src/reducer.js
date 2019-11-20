@@ -6,7 +6,7 @@ const rotate = (id, paths) => {
 };
 const self = (id, paths) => paths.find(test(`${id}$`));
 const parent = (id, paths) => paths.find(test(`${id}$`)).replace(`/${id}`, '');
-const children = (id, paths) => paths.filter(test(`${id}/[a-zA-Z0-9]+$`));
+const children = (id, paths) => paths.filter(test(`${id}/[a-zA-Z0-9_]+$`));
 const siblings = (id, paths) => children(parent(id, paths), paths);
 
 export default function menuReducer(state, action) {
