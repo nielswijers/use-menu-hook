@@ -15,16 +15,19 @@ describe('getMenuProps', () => {
       expect(props['aria-labelledby']).toBe('someid');
     });
 
+    it('passes the props', () => {
+      const { result } = setupHook();
+      const props = result.current.getMenuProps({
+        labelledBy: 'someid',
+        someProp: 1,
+      });
+      expect(props.someProp).toBe(1);
+    });
+
     it('assigns `menu` to role', () => {
       const { result } = setupHook();
       const props = result.current.getMenuProps({ labelledBy: 'someid' });
       expect(props.role).toBe('menu');
     });
-
-    it('hides the menu by default', () =>{
-      const { result } = setupHook();
-      const props = result.current.getMenuProps({ labelledBy: 'someid' });
-      expect(props.style.display).toBe('none');
-    })
   });
 });
