@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "lint": "eslint src examples/*/src",
+    "lint": "eslint .",
     "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
@@ -22,7 +22,6 @@
     "@types/react-dom": "^16.9.4",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "babel-loader": "^8.0.6",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-config-react-app": "^5.0.2",
@@ -34,7 +33,6 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
-    "lerna": "^3.18.5",
     "lint-staged": "^9.4.3",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
@@ -42,8 +40,7 @@
     "react-test-renderer": "^16.11.0",
     "rollup": "^1.27.2",
     "rollup-plugin-babel": "^4.3.3",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "styled-components": "^4.4.1"
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "peerDependencies": {
     "react": ">=0.14.9"
