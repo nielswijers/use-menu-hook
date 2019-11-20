@@ -156,13 +156,20 @@ const useMenu = userProps => {
     };
   };
 
-  const getMenuButtonProps = ({ id } = {}) => {
+  const getMenuButtonProps = ({ id, ...itemProps } = {}) => {
     if (typeof id === 'undefined') {
       throw new Error('getMenuButtonProps requires an id');
     }
+
     return {
       id,
-      ref: buttonRef,
+      ...itemProps,
+      ref: c => {
+        buttonRef.current = c;
+        if (itemProps.ref) {
+          itemProps.ref(c);
+        }
+      },
       'aria-haspopup': true,
       'aria-expanded': isExpanded(id),
       onKeyDown: handleKey(buttonKeyDownhandlers(id)),
@@ -172,16 +179,14 @@ const useMenu = userProps => {
     };
   };
 
-  const getMenuProps = ({ labelledBy } = {}) => {
+  const getMenuProps = ({ labelledBy, ...itemProps } = {}) => {
     if (typeof labelledBy === 'undefined') {
       throw new Error('labelledBy is required');
     }
     return {
+      ...itemProps,
       role: 'menu',
       'aria-labelledby': labelledBy,
-      style: {
-        display: isExpanded(labelledBy) ? undefined : 'none',
-      },
     };
   };
 

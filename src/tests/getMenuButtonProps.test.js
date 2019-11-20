@@ -16,7 +16,14 @@ describe('getMenuButtonProps', () => {
       const props = result.current.getMenuButtonProps(itemProps);
       expect(props.id).toBe('Food');
     });
-
+    it('passes the props', () => {
+      const { result } = setupHook();
+      const props = result.current.getMenuButtonProps({
+        id: 'someid',
+        someProp: 1,
+      });
+      expect(props.someProp).toBe(1);
+    });
     it('assigns false to aria-expanded`', () => {
       const { result } = setupHook();
       const props = result.current.getMenuButtonProps(itemProps);

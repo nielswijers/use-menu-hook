@@ -29,6 +29,15 @@ describe('getMenuItemProps', () => {
       expect(props.id).toBe('someid');
     });
 
+    it('passes the props', () => {
+      const { result } = setupHook();
+      const props = result.current.getMenuItemProps({
+        id: 'someid',
+        someProp: 1,
+      });
+      expect(props.someProp).toBe(1);
+    });
+
     it('assigns `menuitem` to role', () => {
       const { result } = setupHook();
       const props = result.current.getMenuItemProps(itemProps);
@@ -202,7 +211,7 @@ describe('getMenuItemProps', () => {
     });
     describe('blur handler', () => {
       it('closes the menu', () => {
-        const { getByText } = setup({activeKeyPath:'button/fruit/bananas'});
+        const { getByText } = setup({ activeKeyPath: 'button/fruit/bananas' });
         fireEvent.blur(getByText('Bananas'));
         expect(getByText('Food').getAttribute('aria-expanded')).toBe('false');
       });

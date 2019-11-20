@@ -43,6 +43,8 @@ function MenuButton() {
 ## More Examples
 
 - [Menu button](https://codesandbox.io/s/github/nielswijers/use-menu-hook/tree/master/examples/menu-button)
+- [With context](https://codesandbox.io/s/github/nielswijers/use-menu-hook/tree/master/examples/with-context)
+- [With react-popper](https://codesandbox.io/s/github/nielswijers/use-menu-hook/tree/master/examples/with-react-popper)
 
 ## Inspiration
 - [Navigation Menu Button Example](https://www.w3.org/TR/wai-aria-practices/examples/menu-button/menu-button-links.html)
