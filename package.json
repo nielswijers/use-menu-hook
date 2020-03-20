@@ -36,7 +36,7 @@
     "lint-staged": "^10.0.8",
     "prettier": "^1.19.1",
     "react": "^16.13.1",
-    "react-dom": "^16.13.0",
+    "react-dom": "^16.13.1",
     "react-test-renderer": "^16.13.1",
     "rollup": "^2.1.0",
     "rollup-plugin-babel": "^4.4.0",
