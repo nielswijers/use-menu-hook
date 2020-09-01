@@ -12,7 +12,7 @@
     "build": "rollup -c rollup.config.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.11.4",
+    "@babel/core": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-react": "^7.10.4",
     "@testing-library/react": "^10.4.9",
